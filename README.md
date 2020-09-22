@@ -31,3 +31,9 @@ las cruces verdes señalan las casillas donde el jugador puede colocar una nueva
  
 ![tablero example](/tablero_example.jpg)
 
+### 3. Cómo finalizar el juego: 
+La partida termina si una de las siguientes condiciones se cumple:
+* Uno de los jugadores coloca cuatro o más fichas en una línea continua vertical,
+horizontal o diagonalmente. Este jugador gana la partida.
+* Todas las casillas del tablero están ocupadas y ningún jugador cumple la condición
+anterior para ganar. En este caso la partida finaliza en empate.
