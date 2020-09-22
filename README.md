@@ -22,8 +22,10 @@ juego, el mínimo del tablero es 8 X 8 y el máximo de 16 X 16 – 8 X 16-).
 * El usuario seleccionará por medio del mouse la columna donde colocará su ficha.
 ### 2. Reglas del Juego:
 Cómo colocar las fichas. Ambos jugadores sitúan sus fichas (una por movimiento) en el tablero.
-La regla para colocarlas consiste en que la estas siempre "caen hasta abajo". Es decir, una ficha
+La regla para colocarlas consiste en que las fichas siempre "caen hasta abajo". Es decir, una ficha
 puede ser colocada bien en la parte inferior de una columna o bien sobre otra de alguna otra
-columna. La siguiente imagen muestra un ejemplo de la posición de una partida en curso donde
+columna. 
+
+La siguiente imagen muestra un ejemplo de la posición de una partida en curso donde
 las cruces verdes señalan las casillas donde el jugador puede colocar una nueva ficha.
  
