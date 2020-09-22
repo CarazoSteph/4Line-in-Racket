@@ -58,12 +58,20 @@
     )))
 
 
-;;Función auxiliar de matdiagR y elimina el primer elemento de cada fila de la matriz
+;;Función auxiliar de matdiagR y traspuesta y elimina el primer elemento de cada fila de la matriz
 (define (elIniMat matriz)
     (cond ((null? matriz)
     '())
     (else
     (append (list (cdar matriz)) (elIniMat (cdr matriz)))))
+)
+
+;;Función auxiliar traspuesta, saca el primer elemento de todas las filas
+(define (sacIniMat matriz)
+    (cond ((null? matriz)
+    '())
+    (else
+    (append (list (caar matriz)) (sacIniMat (cdr matriz)))))
 )
 
 ;;Retorna una matriz de las diagonales de la parte izquierda de la matriz principal
@@ -85,7 +93,14 @@
 (define (matdiag matriz)
     (append (matdiagL matriz)(matdiagR matriz))
 )
+;;Retorna la traspuesta de una matriz
+(define (traspuesta matriz)
+    (cond ((null? (car matriz))
+    '())
+    (else
+        (cons (sacIniMat matriz) (traspuesta (elIniMat matriz)))))
+)
 
 (matdiag '((1 2 3 4 5) (2 3 4 5 6) (3 4 5 6 7) (4 5 6 7 8) (5 6 7 8 9)))
-(elIniMat '((1 2 3) (3 4 5) (5 6 7) (7 8 9)))
+(traspuesta '((1 2 3) (3 4 5) (5 6 7) (7 8 9)))
 (diag '((1 2 3 4) (2 3 4 5) (3 4 5 7)) 1)
