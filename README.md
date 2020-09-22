@@ -20,7 +20,7 @@ juego, el mínimo del tablero es 8 X 8 y el máximo de 16 X 16 – 8 X 16-).
 * El sistema debe mostrar una interfaz gráfica amigable con el usuario.
 * El sistema debe indicar/proveer una selección de la ficha que el usuario utilizará
 * El usuario seleccionará por medio del mouse la columna donde colocará su ficha.
-2. Reglas del Juego:
+2. Reglas del Juego: /n
 Cómo colocar las fichas. Ambos jugadores sitúan sus fichas (una por movimiento) en el tablero.
 La regla para colocarlas consiste en que la estas siempre "caen hasta abajo". Es decir, una ficha
 puede ser colocada bien en la parte inferior de una columna o bien sobre otra de alguna otra
