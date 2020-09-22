@@ -29,5 +29,5 @@ columna.
 La siguiente imagen muestra un ejemplo de la posición de una partida en curso donde
 las cruces verdes señalan las casillas donde el jugador puede colocar una nueva ficha.
  
-![tablero example](/images/tablero_example.png)
+![tablero example](/tablero_example.jpg)
 
