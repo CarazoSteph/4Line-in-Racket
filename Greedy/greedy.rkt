@@ -58,7 +58,7 @@
     )))
 
 
-;;Función auxiliar de matdiagR y traspuesta y elimina el primer elemento de cada fila de la matriz
+;;Función auxiliar de matdiagR y falsaTraspuesta y elimina el primer elemento de cada fila de la matriz
 (define (elIniMat matriz)
     (cond ((null? matriz)
     '())
@@ -66,7 +66,7 @@
     (append (list (cdar matriz)) (elIniMat (cdr matriz)))))
 )
 
-;;Función auxiliar traspuesta, saca el primer elemento de todas las filas
+;;Función auxiliar falsaTraspuesta, saca el primer elemento de todas las filas
 (define (sacIniMat matriz)
     (cond ((null? matriz)
     '())
@@ -93,14 +93,17 @@
 (define (matdiag matriz)
     (append (matdiagL matriz)(matdiagR matriz))
 )
-;;Retorna la traspuesta de una matriz
-(define (traspuesta matriz)
+;;Retorna la falsaTraspuesta de una matriz
+;;Se llama falsa traspuesta debido a que invierte el orden de la misma para poder analizar las diagonales de la matriz
+(define (falsaTraspuesta matriz)
     (cond ((null? (car matriz))
     '())
     (else
-        (cons (sacIniMat matriz) (traspuesta (elIniMat matriz)))))
+        (cons (sacIniMat (reverse matriz)) (falsaTraspuesta (elIniMat matriz)))))
 )
 
-(matdiag '((1 2 3 4 5) (2 3 4 5 6) (3 4 5 6 7) (4 5 6 7 8) (5 6 7 8 9)))
-(traspuesta '((1 2 3) (3 4 5) (5 6 7) (7 8 9)))
-(diag '((1 2 3 4) (2 3 4 5) (3 4 5 7)) 1)
+;;(matdiag '((1 2 3 4 5) (2 3 4 5 6) (3 4 5 6 7) (4 5 6 7 8) (5 6 7 8 9)))
+;;(matdiag  '((1 2 3) (3 4 5) (5 6 7) (7 8 9)))
+;;(matdiag '((1 2 3 4) (2 3 4 5) (3 4 5 7)))
+;;(falsaTraspuesta '((1 2 3 4) (2 3 4 5) (3 4 5 7)))
+;;(matdiag (falsaTraspuesta '((1 2 3 4) (2 3 4 5) (3 4 5 7))))
