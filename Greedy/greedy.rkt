@@ -1,5 +1,12 @@
 #lang racket
 
+;;Función miembro
+;;Retorna #t o #f si el elemento ingresado se encuentra en la lista
+(define (miembro? elemento lista)
+  (cond ((null? lista)#f)
+   ((equal? (car lista) elemento) #t)
+  (else (miembro? elemento (cdr lista)))))
+
 ;;Retorna la fila indicada, necesita el numero de fila y la matriz
 ;;Ademas returna una lista vacia si el la fila es mayor a las que tiene la matriz
 (define (filaMat fila matriz)
@@ -91,7 +98,7 @@
 )
 ;;Retorna una matriz con las listas de todas las diagonales de la matriz
 (define (matdiag matriz)
-    (append (matdiagL matriz)(matdiagR matriz))
+    (append (matdiagL matriz)(cdr (matdiagR matriz)))
 )
 ;;Retorna la falsaTraspuesta de una matriz
 ;;Se llama falsa traspuesta debido a que invierte el orden de la misma para poder analizar las diagonales de la matriz
@@ -101,7 +108,41 @@
     (else
         (cons (sacIniMat (reverse matriz)) (falsaTraspuesta (elIniMat matriz)))))
 )
+;;retorna una lista con dos matrices para ingresarla al greedy, una de ellas es la matriz principal y la otra son las diagonales
+(define (candidatos matriz)
+    (append (list matriz)  (append (list(matdiag matriz)) (list(matdiag (falsaTraspuesta matriz)))))
+)
 
+;;Función auxiliar de seleccion, busca posibles lineas donde colocar fichas, estu funcion busca pares de fichas
+(define (linea2? lista)
+    (cond ((null? (cdr lista))
+        #f
+    )((or (= (car lista) 1) (= (car lista) 2))
+        (cond((= (car lista) (cadr lista))
+            #t
+        )(else
+        (linea2? (cdr lista))
+        ))
+    )(else
+        (linea2? (cdr lista))
+        )
+)
+)
+;;
+(define (seleccion candidatos)
+    (append (filter linea2? (car candidatos)) (filter linea2? (cadr candidatos)) (filter linea2? (caddr candidatos)))
+)
+
+
+(seleccion (candidatos '(
+    (0 0 0 0 0 0 0 0) 
+    (0 0 0 0 0 0 0 0) 
+    (0 0 0 0 0 0 0 0) 
+    (0 0 0 0 0 0 0 0) 
+    (0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0)
+    (0 0 0 1 0 0 2 0)
+    (2 2 2 2 1 2 0 0))))
 ;;(matdiag '((1 2 3 4 5) (2 3 4 5 6) (3 4 5 6 7) (4 5 6 7 8) (5 6 7 8 9)))
 ;;(matdiag  '((1 2 3) (3 4 5) (5 6 7) (7 8 9)))
 ;;(matdiag '((1 2 3 4) (2 3 4 5) (3 4 5 7)))
