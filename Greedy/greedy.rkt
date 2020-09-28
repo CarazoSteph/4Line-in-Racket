@@ -172,53 +172,111 @@
         )
 
     (else
-        (viabilidadAux? (cdr lista))))
-)
+        (cond
+        ((null? (cddddr lista))
+            (viabilidadAux? (cdr lista))
+        )
+        ((and (=(car lista) 0) (and (or (=(cadr lista) 1) (=(cadr lista) 2)) (and (=(cadr lista) (cadddr lista)) (= (caddr lista) 0))))
+            #t
+        )
+        ((and (=(car lista) 0) (and (or (=(cadr lista) 1) (=(cadr lista) 2)) (and (=(cadr lista) (caddr lista)) (= (cadddr lista) 0))))
+            #t
+        )
+        ((and (=(car lista) 0) (and (or (=(cadr lista) 1) (=(cadr lista) 2)) (and (=(cadr lista) (caddr lista) (cadddr lista)))))
+            #t
+        )
+        (else (viabilidadAux? (cdr lista)))
+        ))
+))
 ;;De las posibles soluciones escoge cuales son viables para ser una solucion
 (define (viabilidad candidatos)
-    (filter viabilidadAux?  (car candidatos))
+    (cond ((null? candidatos)
+        '())
+        (else
+        (append (list (filter viabilidadAux?  (car candidatos))) (viabilidad (cdr candidatos)))
+    ))
 )
 
-(define (objetivo lista)
+
+;;Asigna un valor numerico a las posibles soluciones
+(define (objetivoAux lista)
     (cond 
-    ((null?(cdddr lista))
-    #f
-    )
-    ((or (= (car lista) 1) (= (car lista) 2))
+    ((= (car lista) 1) 
             (cond((and (=(car lista) (caddr lista)) (= (cadr lista) 0) (=(cadddr lista) 0))
-                #t)
+                (list 2))
             ((and (=(car lista) (cadr lista)) (= (caddr lista) 0) (=(cadddr lista) 0))
-                #t)
+                (list 1))
             ((and (=(car lista) (cadr lista) (caddr lista)) (=(cadddr lista) 0))
-                #t)
+                (list 3))
             (else
-        (viabilidadAux? (cdr lista))))
+        (objetivoAux (cdr lista))))
         )
-    ((or (= (car (reverse lista)) 1) (= (car (reverse lista)) 2))
-        (cond((and (=(car (reverse lista)) (caddr (reverse lista))) (= (cadr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
-                #t)
-            ((and (=(car (reverse lista)) (cadr (reverse lista))) (= (caddr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
-                #t)
-            ((and (=(car (reverse lista)) (cadr (reverse lista)) (caddr (reverse lista))) (=(cadddr (reverse lista)) 0))
-                #t)
+    ((= (car lista) 2)
+            (cond((and (=(car lista) (caddr lista)) (= (cadr lista) 0) (=(cadddr lista) 0))
+                (list -2))
+            ((and (=(car lista) (cadr lista)) (= (caddr lista) 0) (=(cadddr lista) 0))
+                (list -1))
+            ((and (=(car lista) (cadr lista) (caddr lista)) (=(cadddr lista) 0))
+                (list -3))
             (else
-        (viabilidadAux? (cdr (reverse lista)))))
+        (objetivoAux (cdr lista))))
+       )
+    ((= (car (reverse lista)) 1)
+        (cond((and (=(car (reverse lista)) (caddr (reverse lista))) (= (cadr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
+                (list 2))
+            ((and (=(car (reverse lista)) (cadr (reverse lista))) (= (caddr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
+                (list 1))
+            ((and (=(car (reverse lista)) (cadr (reverse lista)) (caddr (reverse lista))) (=(cadddr (reverse lista)) 0))
+                (list 3))
+            (else
+        (objetivoAux (cdr (reverse lista)))))
+        )
+    ((= (car (reverse lista)) 2)
+        (cond((and (=(car (reverse lista)) (caddr (reverse lista))) (= (cadr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
+                (list -2))
+            ((and (=(car (reverse lista)) (cadr (reverse lista))) (= (caddr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
+                (list -1))
+            ((and (=(car (reverse lista)) (cadr (reverse lista)) (caddr (reverse lista))) (=(cadddr (reverse lista)) 0))
+                (list -3))
+            (else
+        (objetivoAux (cdr (reverse lista)))))
         )
 
     (else
-        (viabilidadAux? (cdr lista))))
+        (objetivoAux (cdr lista))))
 
 )
 
-;;((2 0 2 0 1 2 0 0) (0 0 0 1 1) (2 2 2))
+;;Concatena el valor numerico en una lista para despues ser evaluada
+(define (aplicarObj lista)
+    (cond ((null? lista)
+    '())
+    (else
+        (append (list(append (list(car lista)) (objetivoAux (car lista)))) (aplicarObj (cdr lista)))
+    )
+    )
+)
+;;Asigna un valor numerico a las posibles soluciones
+(define (objetivo lista)
+    (cond ((null? lista)
+        '()
+    )(else
+        (append (aplicarObj (car lista)) (objetivo (cdr lista)))
+    )
+    )
+)
 
-(seleccion (candidatos '(
+
+
+(viabilidad(seleccion (candidatos '(
     (0 0 0 0 0 0 0 0) 
     (0 0 0 0 0 0 0 0) 
     (0 0 0 0 0 0 0 0) 
     (0 0 0 0 0 0 0 0) 
     (0 0 0 0 0 0 0 0)
-    (0 0 0 0 0 0 0 0)
-    (1 0 1 0 1 0 0 0)
-    (2 0 2 0 2 1 2 1))))
+    (0 1 1 0 0 0 0 0)
+    (0 0 0 0 1 0 0 0)
+    (0 1 1 1 2 0 0 0)))))
+
+
 
