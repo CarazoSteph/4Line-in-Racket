@@ -364,33 +364,180 @@
         (selec1 (cdr lista))
     )))
 
-(define (selec matriz)
-    (cond ((null? (buscSelec3 matriz))
-        (cond ((null? (buscSelec2 matriz))
-            (cond ((null? (buscSelec1 matriz))
-                '()
-            )(else (buscSelec1 matriz))
-            )
-        )(else (buscSelec2 matriz))
-        )
-    )(else (buscSelec3 matriz))
+(define (selec matriz cont)
+    (cond 
+    ((= cont 3)
+        (buscSelec3 matriz)
+    )
+    ((= cont 2)
+        (buscSelec2 matriz)
+    )
+    ((= cont 1)
+        (buscSelec1 matriz)
+    ))
+)
+
+(define (jugadas matriz cont)
+    (selec (objetivo (viabilidad (seleccion (candidatos matriz)))) cont)
+)
+
+(define (columnaSol lista)
+    (cond ((null? (cdr lista))
+    0)
+    ((or (=(car lista) 1) (=(car lista) 2))
+        (cond 
+        ((and (= (car lista) (cadr lista) (caddr lista)) (=(cadddr lista) 0))
+            3)
+        ((and (= (car lista) (cadr lista)) (=(caddr lista) 0) (=(cadddr lista) 0))
+            2)
+        ((and (= (car lista) (caddr lista)) (=(cadr lista) 0) (=(cadddr lista) 0))
+            1)
+        (else
+            (+ (columnaSol (cdr lista)) 1)
+        ))
+    )
+    ((and (= (car lista) 0) (not(zero?(cadr lista))))
+        (cond 
+        ((and (= (cadr lista) (caddr lista) (cadddr lista)))
+            0)
+        ((and (= (cadr lista) (caddr lista)) (=(cadddr lista) 0))
+            3)
+        ((and (= (cadr lista) (cadddr lista)) (=(caddr lista) 0))
+            2)
+        (else
+            (+ (columnaSol (cdr lista)) 1)
+        ))
+    )
+    ((or (=(car (reverse lista)) 1) (=(car (reverse lista)) 2))
+        (cond 
+        ((and (= (car (reverse lista)) (cadr (reverse lista)) (caddr (reverse lista))) (=(cadddr (reverse lista)) 0))
+            (-(length lista) 4))
+        ((and (= (car (reverse lista)) (cadr (reverse lista))) (=(caddr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
+            (-(length lista) 3))
+        ((and (= (car (reverse lista)) (caddr (reverse lista))) (=(cadr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
+            (-(length lista) 2))
+        (else
+            (+ (columnaSol (cdr (reverse lista))) (-(length lista) 1))
+        ))
+    )
+    ((and (=(car (reverse lista)) 0) (not(zero?(cadr lista))))
+        (cond 
+        ((and (= (cadr (reverse lista)) (caddr (reverse lista)) (cadddr (reverse lista))))
+            (-(length lista) 1))
+        ((and (= (cadr (reverse lista)) (caddr (reverse lista))) (=(cadddr (reverse lista)) 0))
+            (-(length lista) 4))
+        ((and (= (cadr (reverse lista)) (cadddr (reverse lista))) (=(caddr (reverse lista)) 0))
+            (-(length lista) 3))
+        (else
+            (+ (columnaSol (cdr (reverse lista))) (-(length lista) 1))
+        ))
+    )
+    (else
+            (+ (columnaSol (cdr lista)) 1)
+    )
     )
 )
-            
-(define (solucion matriz)
-    (selec (objetivo (viabilidad (seleccion (candidatos matriz)))))
-    ;(objetivo(viabilidad (seleccion (candidatos matriz))))
+
+(define (verHoriz matriz lista)
+    (cond 
+    ((null? lista)
+    -1)
+    ((not (list? (caar lista)))
+        (cond 
+        ((= (+(index-of matriz (car lista))1) (length (car matriz)))
+            (columnaSol (car lista))
+        )
+        ((not (zero? (list-ref (list-ref matriz (+ (index-of matriz (car lista)) 1)) (columnaSol (car lista)))))
+            (columnaSol (car lista)))
+        (else 
+        (verHoriz matriz (cdr lista)))
+        )
+        )
+    (else 
+        (cond
+        ((= (+(index-of matriz (caar lista))1) (length (car matriz)))
+            (columnaSol (caar lista))
+        )
+        ((not (zero? (list-ref (list-ref matriz (+ (index-of matriz (caar lista)) 1)) (columnaSol (caar lista)))))
+            (columnaSol (caar lista)))
+        (else 
+        (verHoriz matriz (cdr lista)))
+        )))
 )
 
-(solucion '(
-    (1 0 0 0 0 0 0 0)
-    (0 1 0 0 0 0 0 0)
-    (0 0 0 0 0 0 0 0) 
-    (0 0 0 0 0 0 0 0) 
-    (0 0 1 1 0 0 0 0)
-    (1 0 1 1 0 0 0 2)
-    (1 1 0 2 1 0 0 2)
-    (1 0 1 1 2 2 0 2)
+(define (verDID matriz lista)
+    (cond 
+    ((not (list? (caar lista)))
+        (cond
+            ((=  (length (car lista)) (+(round (/ (length matriz) 2)) 1))
+                (columnaSol (car lista))
+            )
+            ((> (index-of matriz (car lista)) (round (/ (length matriz) 2)))
+                (+(columnaSol (car lista)) (- (length (car lista)) (+(round (/ (length matriz) 2)) 1) ))
+            )
+            ((< (index-of matriz (car lista)) (round (/ (length matriz) 2)))
+                (columnaSol (car lista)))
+            (else
+                (verDID matriz (cdr lista))
+            )))
+        (else
+            (cond
+                ((=  (length (caar lista)) (+(round (/ (length matriz) 2)) 1))
+                    (columnaSol (caar lista))
+                )
+                ((> (index-of matriz (caar lista)) (round (/ (length matriz) 2)))
+                    (+(columnaSol (caar lista)) (- (length (caar lista)) (+(round (/ (length matriz) 2)) 1) ))
+                )
+                ((< (index-of matriz (caar lista)) (round (/ (length matriz) 2)))
+                    (columnaSol (caar lista)))
+                (else
+                    (verDID matriz (cdr lista))
+                ))
+        ))
+)
+
+(define (verSoluc matriz cont)
+    (cond 
+        ((= cont 0)
+        4)
+        ((and (not (null? (car (jugadas matriz cont)))) (not(= (verHoriz matriz (car (jugadas matriz cont))) -1)))
+            (verHoriz matriz (car (jugadas matriz cont)))
+        )
+        ((and(not (null? (cadr (jugadas matriz cont)))) (not(= (verDID (matdiag matriz) (cadr (jugadas matriz cont))) -1)))
+            (verDID (matdiag matriz) (cadr (jugadas matriz cont)))
+        )
+        (else (verSoluc matriz (- cont 1))
+    )
 ))
 
+
+(define (soluc matriz)
+    (cond 
+    ((null? (jugadas matriz 3))
+        (cond 
+        ((null? (jugadas matriz 2))
+            (cond 
+            ((null? (jugadas matriz 1))
+                4)
+            (else
+                (verSoluc matriz 1)
+            )))
+            (else
+                (verSoluc matriz 2)
+            )))
+    (else
+    (verSoluc matriz 3)
+    ))    
+)
+
+(soluc '(
+    (0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0) 
+    (0 0 0 0 0 0 0 0) 
+    (0 0 0 0 0 0 0 0)
+    (0 0 1 2 0 0 0 0)
+    (0 1 2 2 2 0 0 0)
+    (1 2 1 2 0 0 0 0)
+) )
 
