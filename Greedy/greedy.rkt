@@ -81,6 +81,14 @@
     (append (list (caar matriz)) (sacIniMat (cdr matriz)))))
 )
 
+(define (vertical matriz)
+    (cond ((null? (car matriz))
+        '()
+    )(else
+        (append (list (sacIniMat matriz)) (vertical (elIniMat matriz)))
+    )  
+    )
+)
 ;;Retorna una matriz de las diagonales de la parte izquierda de la matriz principal
 (define (matdiagL matriz) 
     (cond((null? matriz)
@@ -110,7 +118,7 @@
 )
 ;;retorna una lista con dos matrices para ingresarla al greedy, una de ellas es la matriz principal y la otra son las diagonales
 (define (candidatos matriz)
-    (append (list matriz)  (append (list(matdiag matriz)) (list(matdiag (falsaTraspuesta matriz)))))
+    (append (list matriz)  (append (list(matdiag matriz)) (list(matdiag (falsaTraspuesta matriz))) (list (vertical matriz))))
 )
 
 ;;Función auxiliar de seleccion, busca posibles lineas donde colocar fichas, estu funcion busca pares de fichas fichas en 101
@@ -142,7 +150,7 @@
 
 ;;Selecciona posibles soluciones
 (define (seleccion candidatos)
-    (append (list(filter linea2? (car candidatos))) (list(filter linea2? (cadr candidatos))) (list(filter linea2? (caddr candidatos))))
+    (append (list(filter linea2? (car candidatos))) (list(filter linea2? (cadr candidatos))) (list(filter linea2? (caddr candidatos))) (list(filter linea2? (cadddr candidatos))))
 )
 ;;De las posibles soluciones escoge cuales son viables para ser una solucion
 (define (viabilidadAux? lista)
@@ -201,82 +209,188 @@
 ;;Asigna un valor numerico a las posibles soluciones
 (define (objetivoAux lista)
     (cond 
+    ((null? (cdr lista)) '())
+    ((null? (cddr lista)) '())
+    ((null? (cdddr lista)) '())
     ((= (car lista) 1) 
-            (cond((and (=(car lista) (caddr lista)) (= (cadr lista) 0) (=(cadddr lista) 0))
-                (list 2))
-            ((and (=(car lista) (cadr lista)) (= (caddr lista) 0) (=(cadddr lista) 0))
-                (list 1))
-            ((and (=(car lista) (cadr lista) (caddr lista)) (=(cadddr lista) 0))
-                (list 3))
+            (cond
+            ((and (=(car lista) (caddr lista)) (=(cadr lista) 0) (= (cadddr lista) 0))
+                (append (list -2) (objetivoAux (cddr lista))))
+            ((and (=(car lista) (cadr lista)) (=(caddr lista) 0) (= (cadddr lista) 0))
+                (append (list -1) (objetivoAux (cddr lista))))
+            ((and (=(car lista) (cadr lista) (caddr lista)) (= (cadddr lista) 0))
+                (append (list -3) (objetivoAux (cddr lista))))
             (else
         (objetivoAux (cdr lista))))
         )
     ((= (car lista) 2)
-            (cond((and (=(car lista) (caddr lista)) (= (cadr lista) 0) (=(cadddr lista) 0))
-                (list -2))
-            ((and (=(car lista) (cadr lista)) (= (caddr lista) 0) (=(cadddr lista) 0))
-                (list -1))
-            ((and (=(car lista) (cadr lista) (caddr lista)) (=(cadddr lista) 0))
-                (list -3))
+            (cond
+            ((and (=(car lista) (caddr lista)) (=(cadr lista) 0) (= (cadddr lista) 0))
+                (append (list 2) (objetivoAux (cddr lista))))
+            ((and (=(car lista) (cadr lista)) (=(caddr lista) 0) (= (cadddr lista) 0))
+                (append (list 1) (objetivoAux (cddr lista))))
+            ((and (=(car lista) (cadr lista) (caddr lista)) (= (cadddr lista) 0))
+                (append (list 3) (objetivoAux (cddr lista))))
             (else
         (objetivoAux (cdr lista))))
        )
     ((= (car (reverse lista)) 1)
-        (cond((and (=(car (reverse lista)) (caddr (reverse lista))) (= (cadr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
-                (list 2))
-            ((and (=(car (reverse lista)) (cadr (reverse lista))) (= (caddr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
-                (list 1))
-            ((and (=(car (reverse lista)) (cadr (reverse lista)) (caddr (reverse lista))) (=(cadddr (reverse lista)) 0))
-                (list 3))
+        (cond
+            ((and (=(car (reverse lista)) (caddr (reverse lista))) (=(cadr (reverse lista)) 0) (= (cadddr (reverse lista)) 0))
+                (append (list -2) (objetivoAux (cddr (reverse lista)))))
+            ((and (=(car (reverse lista)) (cadr (reverse lista))) (=(caddr (reverse lista)) 0) (= (cadddr (reverse lista)) 0))
+                (append (list -1) (objetivoAux (cddr (reverse lista)))))
+            ((and (=(car (reverse lista)) (cadr (reverse lista)) (caddr (reverse lista))) (= (cadddr (reverse lista)) 0))
+                (append (list -3) (objetivoAux (cddr (reverse lista)))))
             (else
         (objetivoAux (cdr (reverse lista)))))
         )
     ((= (car (reverse lista)) 2)
-        (cond((and (=(car (reverse lista)) (caddr (reverse lista))) (= (cadr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
-                (list -2))
-            ((and (=(car (reverse lista)) (cadr (reverse lista))) (= (caddr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
-                (list -1))
-            ((and (=(car (reverse lista)) (cadr (reverse lista)) (caddr (reverse lista))) (=(cadddr (reverse lista)) 0))
-                (list -3))
+        (cond
+            ((and (=(car (reverse lista)) (caddr (reverse lista))) (=(cadr (reverse lista)) 0) (= (cadddr (reverse lista)) 0))
+                (append (list 2) (objetivoAux (cddr (reverse lista)))))
+            ((and (=(car (reverse lista)) (cadr (reverse lista))) (=(caddr (reverse lista)) 0) (= (cadddr (reverse lista)) 0))
+                (append (list 1) (objetivoAux (cddr (reverse lista)))))
+            ((and (=(car (reverse lista)) (cadr (reverse lista)) (caddr (reverse lista))) (= (cadddr (reverse lista)) 0))
+                (append (list 3) (objetivoAux (cddr (reverse lista)))))
             (else
-        (objetivoAux (cdr (reverse lista)))))
-        )
-
+        (objetivoAux (cdr (reverse lista))))))
     (else
-        (objetivoAux (cdr lista))))
+    (cond
+        ((null? (cddddr lista))
+            (objetivoAux (cdr lista))
+        )
+        ((and (=(car lista) 0) (and (=(cadr lista) 1) (and (=(cadr lista) (cadddr lista)) (= (caddr lista) 0))))
+            (append (list -2) (objetivoAux (cdddr lista))))
+        ((and (=(car lista) 0) (and (=(cadr lista) 1) (and (=(cadr lista) (caddr lista)) (= (cadddr lista) 0))))
+            (append (list -1) (objetivoAux (cdddr lista))))
+        ((and (=(car lista) 0) (and (=(cadr lista) 1) (and (=(cadr lista) (caddr lista) (cadddr lista)))))
+            (append (list -3) (objetivoAux (cdddr lista))))
+        ((and (=(car lista) 0) (and (=(cadr lista) 2) (and (=(cadr lista) (cadddr lista)) (= (caddr lista) 0))))
+            (append (list 2) (objetivoAux (cdddr lista))))
+        ((and (=(car lista) 0) (and (=(cadr lista) 2) (and (=(cadr lista) (caddr lista)) (= (cadddr lista) 0))))
+            (append (list 1) (objetivoAux (cdddr lista))))
+        ((and (=(car lista) 0) (and (=(cadr lista) 2) (and (=(cadr lista) (caddr lista) (cadddr lista)))))
+            (append (list 3) (objetivoAux (cdddr lista))))
+        (else 
+        (objetivoAux (cdr lista))))))
 
 )
 
 ;;Concatena el valor numerico en una lista para despues ser evaluada
 (define (aplicarObj lista)
-    (cond ((null? lista)
+    (cond ((null?  lista)
     '())
     (else
-        (append (list(append (list(car lista)) (objetivoAux (car lista)))) (aplicarObj (cdr lista)))
+        (append (list(append (list(car lista)) (list(objetivoAux (car lista))))) (aplicarObj (cdr lista)))
     )
     )
 )
 ;;Asigna un valor numerico a las posibles soluciones
 (define (objetivo lista)
     (cond ((null? lista)
-        '()
-    )(else
-        (append (aplicarObj (car lista)) (objetivo (cdr lista)))
+        '())
+    (else
+        (append (list(aplicarObj (car lista))) (objetivo (cdr lista)))
     )
     )
 )
 
+(define (buscSelec3 matriz)
+    (cond ((null? matriz)
+    '()
+    )(else
+        (append (list(selec3 (car matriz))) (buscSelec3 (cdr matriz)))
+)))
+
+(define (buscSelec2 matriz)
+    (cond ((null? matriz)
+    '()
+    )(else
+        (append (list(selec2 (car matriz))) (buscSelec2 (cdr matriz)))
+)))
 
 
-(viabilidad(seleccion (candidatos '(
-    (0 0 0 0 0 0 0 0) 
-    (0 0 0 0 0 0 0 0) 
-    (0 0 0 0 0 0 0 0) 
-    (0 0 0 0 0 0 0 0) 
-    (0 0 0 0 0 0 0 0)
-    (0 1 1 0 0 0 0 0)
-    (0 0 0 0 1 0 0 0)
-    (0 1 1 1 2 0 0 0)))))
+(define (buscSelec1 matriz)
+    (cond ((null? matriz)
+    '()
+    )(else
+        (append (list(selec1 (car matriz))) (buscSelec1 (cdr matriz)))
+)))
 
+(define (selec3 lista)
+    (cond 
+    ((null? lista)
+    '()
+    )
+    ((miembro? 3 (cadar lista))
+        (append (list(caar lista)) (selec3 (cdr lista)))
+    )
+    ((miembro? -3 (cadar lista))
+        (append (list(list(caar lista))) (selec3 (cdr lista)))
+    )
+    (else
+        (selec3 (cdr lista))
+    ))
+)
+
+(define (selec2 lista)
+    (cond
+    ((null? lista)
+    '()
+    )
+    ((miembro? 2 (cadar lista))
+        (append (list(caar lista)) (selec2 (cdr lista)))
+    )
+    ((miembro? -2 (cadar lista))
+        (append (list(list(caar lista))) (selec2 (cdr lista)))
+    )       
+    (else
+        (selec2 (cdr lista))
+    )))
+
+(define (selec1 lista)
+    (cond
+    ((null? lista)
+        '()
+    )
+    ((miembro? 1 (cadar lista))
+            (append (list(caar lista)) (selec1 (cdr lista)))
+    )
+    ((miembro? -1 (cadar lista))
+            (append (list (list(caar lista))) (selec1 (cdr lista)))
+    )
+    (else
+        (selec1 (cdr lista))
+    )))
+
+(define (selec matriz)
+    (cond ((null? (buscSelec3 matriz))
+        (cond ((null? (buscSelec2 matriz))
+            (cond ((null? (buscSelec1 matriz))
+                '()
+            )(else (buscSelec1 matriz))
+            )
+        )(else (buscSelec2 matriz))
+        )
+    )(else (buscSelec3 matriz))
+    )
+)
+            
+(define (solucion matriz)
+    (selec (objetivo (viabilidad (seleccion (candidatos matriz)))))
+    ;(objetivo(viabilidad (seleccion (candidatos matriz))))
+)
+
+(solucion '(
+    (1 0 0 0 0 0 0 0)
+    (0 1 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0) 
+    (0 0 0 0 0 0 0 0) 
+    (0 0 1 1 0 0 0 0)
+    (1 0 1 1 0 0 0 2)
+    (1 1 0 2 1 0 0 2)
+    (1 0 1 1 2 2 0 2)
+))
 
 
