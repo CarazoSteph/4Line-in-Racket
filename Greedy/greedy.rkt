@@ -220,6 +220,8 @@
                 (append (list -1) (objetivoAux (cddr lista))))
             ((and (=(car lista) (cadr lista) (caddr lista)) (= (cadddr lista) 0))
                 (append (list -3) (objetivoAux (cddr lista))))
+            ((and (=(car lista) (cadddr lista) (caddr lista)) (= (cadr lista) 0))
+                (append (list -3) (objetivoAux (cddr lista))))
             (else
         (objetivoAux (cdr lista))))
         )
@@ -230,6 +232,8 @@
             ((and (=(car lista) (cadr lista)) (=(caddr lista) 0) (= (cadddr lista) 0))
                 (append (list 1) (objetivoAux (cddr lista))))
             ((and (=(car lista) (cadr lista) (caddr lista)) (= (cadddr lista) 0))
+                (append (list 3) (objetivoAux (cddr lista))))
+            ((and (=(car lista) (cadddr lista) (caddr lista)) (= (cadr lista) 0))
                 (append (list 3) (objetivoAux (cddr lista))))
             (else
         (objetivoAux (cdr lista))))
@@ -242,6 +246,8 @@
                 (append (list -1) (objetivoAux (cddr (reverse lista)))))
             ((and (=(car (reverse lista)) (cadr (reverse lista)) (caddr (reverse lista))) (= (cadddr (reverse lista)) 0))
                 (append (list -3) (objetivoAux (cddr (reverse lista)))))
+            ((and (=(car (reverse lista)) (cadddr (reverse lista)) (caddr (reverse lista))) (= (cadr (reverse lista)) 0))
+                (append (list -3) (objetivoAux (cddr (reverse lista)))))
             (else
         (objetivoAux (cdr (reverse lista)))))
         )
@@ -252,6 +258,8 @@
             ((and (=(car (reverse lista)) (cadr (reverse lista))) (=(caddr (reverse lista)) 0) (= (cadddr (reverse lista)) 0))
                 (append (list 1) (objetivoAux (cddr (reverse lista)))))
             ((and (=(car (reverse lista)) (cadr (reverse lista)) (caddr (reverse lista))) (= (cadddr (reverse lista)) 0))
+                (append (list 3) (objetivoAux (cddr (reverse lista)))))
+            ((and (=(car (reverse lista)) (cadddr (reverse lista)) (caddr (reverse lista))) (= (cadr (reverse lista)) 0))
                 (append (list 3) (objetivoAux (cddr (reverse lista)))))
             (else
         (objetivoAux (cdr (reverse lista))))))
@@ -690,6 +698,5 @@
     (0 0 0 0 0 0 0 0)
     (0 0 0 0 0 0 0 0)
     (0 0 0 0 0 0 0 0)
-
 )
 )
