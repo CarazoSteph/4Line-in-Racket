@@ -417,7 +417,7 @@
         ((and (= (car (reverse lista)) (caddr (reverse lista))) (=(cadr (reverse lista)) 0) (=(cadddr (reverse lista)) 0))
             (-(length lista) 2))
         (else
-            (+ (columnaSol (cdr (reverse lista))) (-(length lista) 1))
+            (+ (columnaSol (cdr (reverse lista))) -1)
         ))
     )
     ((and (=(car (reverse lista)) 0) (not(zero?(cadr lista))))
@@ -429,7 +429,7 @@
         ((and (= (cadr (reverse lista)) (cadddr (reverse lista))) (=(caddr (reverse lista)) 0))
             (-(length lista) 3))
         (else
-            (+ (columnaSol (cdr (reverse lista))) (-(length lista) 1))
+            (+ (columnaSol (cdr (reverse lista))) -1)
         ))
     )
     (else
@@ -437,7 +437,6 @@
     )
     )
 )
-
 (define (verHoriz matriz lista)
     (cond 
     ((null? lista)
@@ -465,48 +464,166 @@
         )))
 )
 
-(define (verDID matriz lista)
+(define (verDID matrizD lista)
     (cond 
+    ((null? lista)
+    -1)
     ((not (list? (caar lista)))
         (cond
-            ((=  (length (car lista)) (+(round (/ (length matriz) 2)) 1))
-                (columnaSol (car lista))
+            ((eq?  (length (car lista)) (round (/ (+(length matrizD) 1) 2)))
+                (cond
+                    ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (car lista)) 1)) (columnaSol (car lista)))))
+                        (columnaSol (car lista)))
+                    (else
+                    (verDID matrizD (cdr lista))
+                ))
             )
-            ((> (index-of matriz (car lista)) (round (/ (length matriz) 2)))
-                (+(columnaSol (car lista)) (- (length (car lista)) (+(round (/ (length matriz) 2)) 1) ))
+            ((> (index-of matrizD (car lista)) (round (/ (length matrizD) 2)))
+                (cond
+                    ((not (zero?(list-ref (list-ref matrizD (- (index-of matrizD (car lista)) 1)) (+(columnaSol (car lista)) 1 ))))
+                        (+(columnaSol (car lista)) (-  (+(round (/ (length matrizD) 2)) 1) (+(length (car lista))1))))
+                    (else
+                (verDID matrizD (cdr lista))
+            ))
             )
-            ((< (index-of matriz (car lista)) (round (/ (length matriz) 2)))
-                (columnaSol (car lista)))
+            ((< (index-of matrizD (car lista)) (round (/ (length matrizD) 2)))
+                (cond
+                    ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (car lista)) 1)) (columnaSol (car lista)))))
+                        (columnaSol (car lista)))
+                    (else
+                (verDID matrizD (cdr lista))
+            ))
+            )
+                
             (else
-                (verDID matriz (cdr lista))
+                (verDID matrizD (cdr lista))
             )))
         (else
             (cond
-                ((=  (length (caar lista)) (+(round (/ (length matriz) 2)) 1))
-                    (columnaSol (caar lista))
+                ((eq?  (length (caar lista)) (round (/ (+(length matrizD) 1) 2)))
+                    (cond
+                    ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (caar lista)) 1)) (columnaSol (caar lista)))))
+                        (columnaSol (caar lista)))
+                    (else
+                (verDID matrizD (cdr lista)))
                 )
-                ((> (index-of matriz (caar lista)) (round (/ (length matriz) 2)))
-                    (+(columnaSol (caar lista)) (- (length (caar lista)) (+(round (/ (length matriz) 2)) 1) ))
                 )
-                ((< (index-of matriz (caar lista)) (round (/ (length matriz) 2)))
-                    (columnaSol (caar lista)))
-                (else
-                    (verDID matriz (cdr lista))
+                ((> (index-of matrizD (caar lista)) (round (/ (length matrizD) 2)))
+                    (cond
+                            ((not (zero?(list-ref (list-ref matrizD (- (index-of matrizD (caar lista)) 1)) (+(columnaSol (caar lista)) 1 ))))
+                                (+(columnaSol (caar lista)) (- (length (caar lista)) (+(round (/ (length matrizD) 2)) 1) )))
+                            (else
+                        (verDID matrizD (cdr lista))
+                    ))
+                )
+                ((< (index-of matrizD (caar lista)) (round (/ (length matrizD) 2)))
+                    (cond
+                    ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (caar lista)) 1)) (columnaSol (caar lista)))))
+                        (columnaSol (caar lista)))
+                    (else
+                (verDID matrizD (cdr lista)))
                 ))
+                (else
+                    (verDID matrizD (cdr lista))
+                ))
+                
+                ))
+)
+
+(define (verDDI matrizD lista)
+    (cond 
+    ((null? lista)
+    -1)
+    ((not (list? (caar lista)))
+        (cond
+            ((eq?  (length (car lista)) (round (/ (+(length matrizD) 1) 2)))
+                (cond
+                    ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (car lista)) 1)) (-(columnaSol (car lista))1))))
+                        (columnaSol (car lista)))
+                    (else
+                (verDDI matrizD (cdr lista))
+            ))
+            )
+            ((> (index-of matrizD (car lista)) (round (/ (length matrizD) 2)))
+                (cond
+                    ((not (zero?(list-ref (list-ref matrizD (- (index-of matrizD (car lista)) 1)) (columnaSol (car lista)) )))
+                        (columnaSol (car lista)))
+                    (else
+                (verDDI matrizD (cdr lista))
+            ))
+            )
+            ((< (index-of matrizD (car lista)) (round (/ (length matrizD) 2)))
+                (cond
+                    ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (car lista)) 1)) (-(columnaSol (car lista))1))))
+                        (+(+(columnaSol (car lista)) (-  (+(round (/ (length matrizD) 2)) 1) (+(length (car lista))1)))1))
+                    (else
+                (verDDI matrizD (cdr lista))
+            ))
+            )
+                
+            (else
+                (verDDI matrizD (cdr lista))
+            )))
+        (else
+            (cond
+                ((eq?   (length (caar lista)) (round (/ (+(length matrizD) 1) 2)))
+                    (cond
+                    ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (caar lista)) 1)) (-(columnaSol (caar lista))1))))
+                        (columnaSol (caar lista)))
+                    (else
+                (verDDI matrizD (cdr lista)))
+                )
+                )
+                ((> (index-of matrizD (caar lista)) (round (/ (length matrizD) 2)))
+                    (cond
+                            ((not (zero?(list-ref (list-ref matrizD (- (index-of matrizD (caar lista)) 1)) (columnaSol (caar lista)) )))
+                                (columnaSol (caar lista)))
+                            (else
+                        (verDDI matrizD (cdr lista))
+                    ))
+                )
+                ((< (index-of matrizD (caar lista)) (round (/ (length matrizD) 2)))
+                    (cond
+                    ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (caar lista)) 1)) (-(columnaSol (caar lista))1))))
+                        (+(columnaSol (caar lista)) (- (length (caar lista)) (+(round (/ (length matrizD) 2)) 1) )))
+                    (else
+                (verDDI matrizD (cdr lista)))
+                ))
+                (else
+                    (verDDI matrizD (cdr lista))
+                ))
+                ))
+)
+
+(define (verVert matrizV lista)
+    (cond 
+    ((null? lista)
+    -1)
+    ((not (list? (caar lista)))
+        (index-of matrizV (car lista)))
+    (else 
+        (index-of matrizV (caar lista))
         ))
 )
 
 (define (verSoluc matriz cont)
     (cond 
         ((= cont 0)
-        4)
+        0)
         ((and (not (null? (car (jugadas matriz cont)))) (not(= (verHoriz matriz (car (jugadas matriz cont))) -1)))
             (verHoriz matriz (car (jugadas matriz cont)))
         )
-        ((and(not (null? (cadr (jugadas matriz cont)))) (not(= (verDID (matdiag matriz) (cadr (jugadas matriz cont))) -1)))
+        ((and(not (null? (cadr (jugadas matriz cont)))) (not(= (verDID  (matdiag matriz) (cadr (jugadas matriz cont))) -1)))
             (verDID (matdiag matriz) (cadr (jugadas matriz cont)))
         )
-        (else (verSoluc matriz (- cont 1))
+        ((and(not (null? (caddr (jugadas matriz cont)))) (not(= (verDDI (matdiag (falsaTraspuesta matriz)) (caddr (jugadas matriz cont))) -1)))
+            (verDDI (matdiag (falsaTraspuesta matriz)) (caddr (jugadas matriz cont)))
+        )
+        ((and (not (null? (cadddr (jugadas matriz cont)))) (not(= (verVert (vertical matriz) (cadddr (jugadas matriz cont))) -1)))
+            (verVert (vertical matriz) (cadddr (jugadas matriz cont)))
+        )
+        (else 
+        (verSoluc matriz (- cont 1))
     )
 ))
 
@@ -518,7 +635,7 @@
         ((null? (jugadas matriz 2))
             (cond 
             ((null? (jugadas matriz 1))
-                4)
+                0)
             (else
                 (verSoluc matriz 1)
             )))
@@ -530,14 +647,27 @@
     ))    
 )
 
-(soluc '(
-    (0 0 0 0 0 0 0 0)
-    (0 0 0 0 0 0 0 0)
-    (0 0 0 0 0 0 0 0) 
-    (0 0 0 0 0 0 0 0) 
-    (0 0 0 0 0 0 0 0)
-    (0 0 1 2 0 0 0 0)
-    (0 1 2 2 2 0 0 0)
-    (1 2 1 2 0 0 0 0)
-) )
 
+
+(soluc '(
+    (0 0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 1 0 0)
+    (0 0 0 0 0 0 1 0 0)
+    (0 0 0 0 0 0 1 0 0)
+))
+
+
+
+
+
+
+
+;error 1           1
+;       1    o    1
+;        1       1
+;         0     0
