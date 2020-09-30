@@ -295,29 +295,28 @@
     )
     )
 )
-
+;;Ejecuta la funcion selec la cual agrupa las de indice 3
 (define (buscSelec3 matriz)
     (cond ((null? matriz)
     '()
     )(else
         (append (list(selec3 (car matriz))) (buscSelec3 (cdr matriz)))
 )))
-
+;;Ejecuta la funcion selec la cual agrupa las de indice 2
 (define (buscSelec2 matriz)
     (cond ((null? matriz)
     '()
     )(else
         (append (list(selec2 (car matriz))) (buscSelec2 (cdr matriz)))
 )))
-
-
+;;Ejecuta la funcion selec la cual agrupa las de indice 1
 (define (buscSelec1 matriz)
     (cond ((null? matriz)
     '()
     )(else
         (append (list(selec1 (car matriz))) (buscSelec1 (cdr matriz)))
 )))
-
+;;Busca en las soluciones objetivo las que tienen indice #3
 (define (selec3 lista)
     (cond 
     ((null? lista)
@@ -333,7 +332,7 @@
         (selec3 (cdr lista))
     ))
 )
-
+;;Busca en las soluciones objetivo las que tienen indice #2
 (define (selec2 lista)
     (cond
     ((null? lista)
@@ -348,7 +347,7 @@
     (else
         (selec2 (cdr lista))
     )))
-
+;;Busca en las soluciones objetivo las que tienen indice #1
 (define (selec1 lista)
     (cond
     ((null? lista)
@@ -363,7 +362,7 @@
     (else
         (selec1 (cdr lista))
     )))
-
+;;Funcion selec sirve para buscar las soluciones con heuristico especifico
 (define (selec matriz cont)
     (cond 
     ((= cont 3)
@@ -376,11 +375,11 @@
         (buscSelec1 matriz)
     ))
 )
-
+;;Función jugadas ejecuta todas las funciones del algoritmo voraz para agrupar las soluciones mas viables
 (define (jugadas matriz cont)
     (selec (objetivo (viabilidad (seleccion (candidatos matriz)))) cont)
 )
-
+;;Funcion auxiliar util para encontrar la columna donde se desea insertar la ficha
 (define (columnaSol lista)
     (cond ((null? (cdr lista))
     0)
@@ -437,6 +436,7 @@
     )
     )
 )
+;;Valida las soluciones de la sublista de soluciones horizontales
 (define (verHoriz matriz lista)
     (cond 
     ((null? lista)
@@ -463,7 +463,7 @@
         (verHoriz matriz (cdr lista)))
         )))
 )
-
+;;Valida las soluciones de la sublista de soluciones de diagonales de derecha a izquierda
 (define (verDID matrizD lista)
     (cond 
     ((null? lista)
@@ -529,7 +529,7 @@
                 
                 ))
 )
-
+;;Valida las soluciones de la sublista de soluciones de diagonales de izquierda a derecha
 (define (verDDI matrizD lista)
     (cond 
     ((null? lista)
@@ -594,7 +594,7 @@
                 ))
                 ))
 )
-
+;;Funcion para verificar las soluciones verticales de la sublista de la sublista 
 (define (verVert matrizV lista)
     (cond 
     ((null? lista)
@@ -605,11 +605,11 @@
         (index-of matrizV (caar lista))
         ))
 )
-
+;;Funcion auxiliar de solucion busca y veerifica las soluciones para retornar la columna
 (define (verSoluc matriz cont)
     (cond 
         ((= cont 0)
-        0)
+        (random (length (car matriz))))
         ((and (not (null? (car (jugadas matriz cont)))) (not(= (verHoriz matriz (car (jugadas matriz cont))) -1)))
             (verHoriz matriz (car (jugadas matriz cont)))
         )
@@ -626,8 +626,7 @@
         (verSoluc matriz (- cont 1))
     )
 ))
-
-
+;;Funcion soluc, diseñada para ser llamada desde la interfaz, se ingresa la matriz y un entero que indica la columna 
 (define (soluc matriz)
     (cond 
     ((null? (jugadas matriz 3))
@@ -635,7 +634,7 @@
         ((null? (jugadas matriz 2))
             (cond 
             ((null? (jugadas matriz 1))
-                0)
+                (random (length (car matriz))))
             (else
                 (verSoluc matriz 1)
             )))
@@ -643,31 +642,5 @@
                 (verSoluc matriz 2)
             )))
     (else
-    (verSoluc matriz 3)
-    ))    
+    (verSoluc matriz 3)))
 )
-
-
-
-(soluc '(
-    (0 0 0 0 0 0 0 0 0)
-    (0 0 0 0 0 0 0 0 0)
-    (0 0 0 0 0 0 0 0 0)
-    (0 0 0 0 0 0 0 0 0)
-    (0 0 0 0 0 0 0 0 0)
-    (0 0 0 0 0 0 0 0 0)
-    (0 0 0 0 0 0 1 0 0)
-    (0 0 0 0 0 0 1 0 0)
-    (0 0 0 0 0 0 1 0 0)
-))
-
-
-
-
-
-
-
-;error 1           1
-;       1    o    1
-;        1       1
-;         0     0
