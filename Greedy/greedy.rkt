@@ -472,6 +472,9 @@
         (cond
             ((eq?  (length (car lista)) (round (/ (+(length matrizD) 1) 2)))
                 (cond
+                    ((or (< (columnaSol (car lista)) 1) (>= (columnaSol (car lista)) (length(list-ref matrizD (+ (index-of matrizD (car lista)) 1)))))
+                        (columnaSol (car lista))
+                    )
                     ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (car lista)) 1)) (columnaSol (car lista)))))
                         (columnaSol (car lista)))
                     (else
@@ -480,6 +483,9 @@
             )
             ((> (index-of matrizD (car lista)) (round (/ (length matrizD) 2)))
                 (cond
+                    ((or (< (+(columnaSol (car lista))1) (>= (+(columnaSol (car lista))1) (length(list-ref matrizD (- (index-of matrizD (car lista)) 1)))))
+                        (+(columnaSol (car lista)) (-  (+(round (/ (length matrizD) 2)) 1) (+(length (car lista))1)))
+                    ))
                     ((not (zero?(list-ref (list-ref matrizD (- (index-of matrizD (car lista)) 1)) (+(columnaSol (car lista)) 1 ))))
                         (+(columnaSol (car lista)) (-  (+(round (/ (length matrizD) 2)) 1) (+(length (car lista))1))))
                     (else
@@ -488,6 +494,9 @@
             )
             ((< (index-of matrizD (car lista)) (round (/ (length matrizD) 2)))
                 (cond
+                    ((or (< (columnaSol (car lista)) 1) (>= (columnaSol (car lista)) (length (list-ref matrizD (+ (index-of matrizD (car lista)) 1)))))
+                        (columnaSol (car lista))
+                    )
                     ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (car lista)) 1)) (columnaSol (car lista)))))
                         (columnaSol (car lista)))
                     (else
@@ -502,6 +511,9 @@
             (cond
                 ((eq?  (length (caar lista)) (round (/ (+(length matrizD) 1) 2)))
                     (cond
+                    ((or (< (columnaSol (caar lista)) 1)  (>= (columnaSol (caar lista)) (length(list-ref matrizD (+ (index-of matrizD (caar lista)) 1)))))
+                        (columnaSol (caar lista))
+                    )
                     ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (caar lista)) 1)) (columnaSol (caar lista)))))
                         (columnaSol (caar lista)))
                     (else
@@ -510,6 +522,9 @@
                 )
                 ((> (index-of matrizD (caar lista)) (round (/ (length matrizD) 2)))
                     (cond
+                        ((or (< (+(columnaSol (caar lista))1) 1) (>= (+(columnaSol (caar lista))1) (length(list-ref matrizD (- (index-of matrizD (caar lista)) 1)))))
+                        (+(columnaSol (caar lista)) (-  (+(round (/ (length matrizD) 2)) 1) (+(length (caar lista))1)))
+                    )
                             ((not (zero?(list-ref (list-ref matrizD (- (index-of matrizD (caar lista)) 1)) (+(columnaSol (caar lista)) 1 ))))
                                 (+(columnaSol (caar lista)) (- (length (caar lista)) (+(round (/ (length matrizD) 2)) 1) )))
                             (else
@@ -518,6 +533,9 @@
                 )
                 ((< (index-of matrizD (caar lista)) (round (/ (length matrizD) 2)))
                     (cond
+                    ((or (< (columnaSol (caar lista)) 1) (>= (columnaSol (caar lista)) (length (list-ref matrizD (+ (index-of matrizD (caar lista)) 1)))))
+                        (columnaSol (caar lista))
+                    )
                     ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (caar lista)) 1)) (columnaSol (caar lista)))))
                         (columnaSol (caar lista)))
                     (else
@@ -538,6 +556,9 @@
         (cond
             ((eq?  (length (car lista)) (round (/ (+(length matrizD) 1) 2)))
                 (cond
+                    ((or (< (-(columnaSol (car lista))1) 1) (>= (-(columnaSol (car lista))1) (length (list-ref matrizD (+ (index-of matrizD (car lista)) 1)))))
+                        (columnaSol (car lista))
+                    )
                     ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (car lista)) 1)) (-(columnaSol (car lista))1))))
                         (columnaSol (car lista)))
                     (else
@@ -546,6 +567,9 @@
             )
             ((> (index-of matrizD (car lista)) (round (/ (length matrizD) 2)))
                 (cond
+                    ((or (< (columnaSol (car lista)) 1) (>= (columnaSol (car lista)) (length(list-ref matrizD (- (index-of matrizD (car lista)) 1)))))
+                        (columnaSol (car lista))
+                    )
                     ((not (zero?(list-ref (list-ref matrizD (- (index-of matrizD (car lista)) 1)) (columnaSol (car lista)) )))
                         (columnaSol (car lista)))
                     (else
@@ -554,6 +578,9 @@
             )
             ((< (index-of matrizD (car lista)) (round (/ (length matrizD) 2)))
                 (cond
+                    ((or (< (-(columnaSol (car lista))1) 1) (>= (-(columnaSol (car lista))1) (length(list-ref matrizD (+ (index-of matrizD (car lista)) 1)))))
+                        (+(+(columnaSol (car lista)) (-  (+(round (/ (length matrizD) 2)) 1) (+(length (car lista))1)))1)
+                    )
                     ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (car lista)) 1)) (-(columnaSol (car lista))1))))
                         (+(+(columnaSol (car lista)) (-  (+(round (/ (length matrizD) 2)) 1) (+(length (car lista))1)))1))
                     (else
@@ -568,6 +595,9 @@
             (cond
                 ((eq?   (length (caar lista)) (round (/ (+(length matrizD) 1) 2)))
                     (cond
+                    ((or (< (-(columnaSol (caar lista))1) 1) (>= (-(columnaSol (caar lista))1) (length (list-ref matrizD (+ (index-of matrizD (caar lista)) 1)))))
+                        (columnaSol (caar lista))
+                    )
                     ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (caar lista)) 1)) (-(columnaSol (caar lista))1))))
                         (columnaSol (caar lista)))
                     (else
@@ -576,6 +606,9 @@
                 )
                 ((> (index-of matrizD (caar lista)) (round (/ (length matrizD) 2)))
                     (cond
+                    ((or (< (columnaSol (caar lista)) 1) (>= (columnaSol (caar lista)) (length(list-ref matrizD (- (index-of matrizD (caar lista)) 1)))))
+                        (columnaSol (caar lista))
+                    )
                             ((not (zero?(list-ref (list-ref matrizD (- (index-of matrizD (caar lista)) 1)) (columnaSol (caar lista)) )))
                                 (columnaSol (caar lista)))
                             (else
@@ -584,6 +617,9 @@
                 )
                 ((< (index-of matrizD (caar lista)) (round (/ (length matrizD) 2)))
                     (cond
+                    ((or (< (-(columnaSol (caar lista))1) 1) (>= (-(columnaSol (caar lista))1) (length(list-ref matrizD (+ (index-of matrizD (caar lista)) 1)))))
+                        (+(+(columnaSol (caar lista)) (-  (+(round (/ (length matrizD) 2)) 1) (+(length (caar lista))1)))1)
+                    )
                     ((not (zero?(list-ref (list-ref matrizD (+ (index-of matrizD (caar lista)) 1)) (-(columnaSol (caar lista))1))))
                         (+(columnaSol (caar lista)) (- (length (caar lista)) (+(round (/ (length matrizD) 2)) 1) )))
                     (else
@@ -643,4 +679,17 @@
             )))
     (else
     (verSoluc matriz 3)))
+)
+
+(soluc '(
+    (0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0)
+    (0 0 0 0 0 0 0 0)
+
+)
 )
