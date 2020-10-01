@@ -653,7 +653,7 @@
 (define (verSoluc matriz cont)
     (cond 
         ((= cont 0)
-        (random (length (car matriz))))
+        (random (-(length (car matriz))1)))
         ((and (not (null? (car (jugadas matriz cont)))) (not(= (verHoriz matriz (car (jugadas matriz cont))) -1)))
             (verHoriz matriz (car (jugadas matriz cont)))
         )
@@ -678,7 +678,7 @@
         ((null? (jugadas matriz 2))
             (cond 
             ((null? (jugadas matriz 1))
-                (random (length (car matriz))))
+                (random (-(length (car matriz))1)))
             (else
                 (verSoluc matriz 1)
             )))
